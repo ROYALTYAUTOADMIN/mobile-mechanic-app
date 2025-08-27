@@ -2,11 +2,13 @@ import path from 'path';
 import express from 'express';
 
 export function setupStaticServing(app) {
-  app.use(express.static(path.join(process.cwd(), 'public')));
-  app.get('/*splat', (req, res, next) => {
+  const buildPath = path.join(process.cwd(), 'build'); // <- point to build folder
+  app.use(express.static(buildPath));
+
+  app.get('/*', (req, res, next) => {
     if (req.path.startsWith('/api/')) {
       return next();
     }
-    res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 }

@@ -27,7 +27,6 @@ app.use((req, res, next) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
-    console.log('Login attempt:', { username, role });
 
     if (role === 'mechanic' && username === 'ROYALTYAUTOADMIN' && password === 'Napkin06102001!') {
       const adminUser = await db
@@ -80,23 +79,9 @@ app.get('/api/services', async (req, res) => {
 ===================== */
 
 if (process.env.NODE_ENV === 'production') {
-  setupStaticServing(app); // if you have static-serve.js
+  setupStaticServing(app);
 }
-
-// Serve React build folder
-const buildPath = path.join(process.cwd(), 'build'); // 'build' is the folder React creates
-app.use(express.static(buildPath));
-
-// Catch-all route to serve index.html for React SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(buildPath, 'index.html'));
-});
 
 /* =====================
    START SERVER
-===================== */
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+===============
