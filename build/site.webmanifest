@@ -1,0 +1,24 @@
+{
+  "name": "Royalty Auto Mobile Mechanic",
+  "short_name": "Royalty Auto",
+  "description": "Professional mobile mechanic service - book repairs and maintenance at your location",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "https://royalty-auto.com/wp-content/uploads/2025/08/img_9317.png?w=1024",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://royalty-auto.com/wp-content/uploads/2025/08/img_9317.png?w=1024",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#DD0302",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["automotive", "business", "utilities"]
+}
