@@ -1,18 +1,17 @@
-// index.js
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { setupStaticServing } from './static-serve.js';
 import { db } from './database.js';
-import { setupStaticServing } from './static-serve.js'; // Make sure this exists
 
 dotenv.config();
-
 const app = express();
+
+// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Logger for API requests
+// Log API requests
 app.use((req, res, next) => {
   if (req.path.includes('/api/')) {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -20,12 +19,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// -------------------
-// Auth Route
-// -------------------
+/* =====================
+   API ROUTES
+===================== */
+
+// Login route
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
+    console.log('Login attempt:', { username, role });
 
     if (role === 'mechanic' && username === 'ROYALTYAUTOADMIN' && password === 'Napkin06102001!') {
       const adminUser = await db
@@ -37,8 +39,7 @@ app.post('/api/auth/login', async (req, res) => {
 
       if (adminUser) {
         const { password: _, ...userWithoutPassword } = adminUser;
-        res.json({ success: true, user: userWithoutPassword });
-        return;
+        return res.json({ success: true, user: userWithoutPassword });
       }
     }
 
@@ -50,54 +51,52 @@ app.post('/api/auth/login', async (req, res) => {
       .where('role', '=', role)
       .executeTakeFirst();
 
-    if (!user) {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
-      return;
+    if (user) {
+      if (user.is_banned) return res.status(403).json({ success: false, message: user.ban_message || 'Banned.', banned: true });
+      if (user.role === 'mechanic' && !user.is_approved) return res.status(403).json({ success: false, message: 'Pending approval.', pending_approval: true });
+
+      const { password: _, ...userWithoutPassword } = user;
+      return res.json({ success: true, user: userWithoutPassword });
     }
 
-    if (user.is_banned) {
-      res.status(403).json({ success: false, message: user.ban_message || 'Banned.', banned: true });
-      return;
-    }
-
-    if (user.role === 'mechanic' && !user.is_approved) {
-      res.status(403).json({ success: false, message: 'Pending approval.', pending_approval: true });
-      return;
-    }
-
-    const { password: _, ...userWithoutPassword } = user;
-    res.json({ success: true, user: userWithoutPassword });
-
+    res.status(401).json({ success: false, message: 'Invalid credentials' });
   } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
-// -------------------
-// Services Route
-// -------------------
+// Get services route
 app.get('/api/services', async (req, res) => {
   try {
     const services = await db.selectFrom('services').selectAll().orderBy('id').execute();
     res.json(services);
   } catch (error) {
-    console.error('Services error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// -------------------
-// Serve static frontend
-// -------------------
+/* =====================
+   SERVE FRONTEND
+===================== */
+
 if (process.env.NODE_ENV === 'production') {
-  setupStaticServing(app);
+  setupStaticServing(app); // if you have static-serve.js
 }
 
-// -------------------
-// Start server
-// -------------------
+// Serve React build folder
+const buildPath = path.join(process.cwd(), 'build'); // 'build' is the folder React creates
+app.use(express.static(buildPath));
+
+// Catch-all route to serve index.html for React SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
+
+/* =====================
+   START SERVER
+===================== */
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 API Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
