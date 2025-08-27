@@ -10,9 +10,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/public/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#DD0302" />
-
-    <!-- Tailwind / CSS -->
-    <link rel="stylesheet" href="/index.css" />
   </head>
   <body>
     <div id="root"></div>
@@ -20,10 +17,10 @@
     <!-- React entry -->
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Service Worker -->
+    <!-- Optional: Service Worker -->
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
+        window.addEventListener('load', () => {
           navigator.serviceWorker
             .register('/sw.js')
             .then(() => console.log('ServiceWorker registered'))
