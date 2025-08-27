@@ -6,12 +6,12 @@
   "scope": "/",
   "icons": [
     {
-      "src": "https://royalty-auto.com/wp-content/uploads/2025/08/img_9317.png?w=1024",
+      "src": "/assets/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://royalty-auto.com/wp-content/uploads/2025/08/img_9317.png?w=1024",
+      "src": "/assets/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

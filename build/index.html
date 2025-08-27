@@ -1,73 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Royalty Auto - Mobile Mechanic Service</title>
-    <meta name="title" content="Royalty Auto - Mobile Mechanic Service" />
-    <meta name="description" content="Professional mobile mechanic service - book repairs and maintenance at your location. Fast, reliable automotive service that comes to you." />
-    <meta name="keywords" content="mobile mechanic, car repair, auto service, automotive, maintenance, oil change, brake service, diagnostic" />
-    <meta name="author" content="Royalty Auto" />
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="/" />
-    <meta property="og:title" content="Royalty Auto - Mobile Mechanic Service" />
-    <meta property="og:description" content="Professional mobile mechanic service - book repairs and maintenance at your location." />
-    <meta property="og:image" content="/android-chrome-512x512.png" />
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="/" />
-    <meta property="twitter:title" content="Royalty Auto - Mobile Mechanic Service" />
-    <meta property="twitter:description" content="Professional mobile mechanic service - book repairs and maintenance at your location." />
-    <meta property="twitter:image" content="/android-chrome-512x512.png" />
-    
-    <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#DD0302" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Royalty Auto" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    
-    <!-- Additional Mobile Optimization -->
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-TileColor" content="#DD0302" />
-    <meta name="msapplication-config" content="/browserconfig.xml" />
-    
-    <!-- Production CSS -->
-    <link rel="stylesheet" href="/assets/index.css" />
-    
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="/api" />
-  </head>
-  <body>
-    <div id="root" class="contents"></div>
-    <script type="module" src="/assets/index.js"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-              console.log('ServiceWorker registration successful');
-            })
-            .catch(function(error) {
-              console.log('ServiceWorker registration failed: ', error);
-            });
-        });
-      }
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royalty Auto - Mobile Mechanic Service</title>
+
+  <link rel="icon" type="image/png" href="/assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png" />
+
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#DD0302" />
+
+  <link rel="stylesheet" href="/assets/index.css" />
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/assets/index.js"></script>
+
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(registration) {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+  </script>
+</body>
 </html>
