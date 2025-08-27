@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
+    console.log('Login attempt:', { username, role });
 
     if (role === 'mechanic' && username === 'ROYALTYAUTOADMIN' && password === 'Napkin06102001!') {
       const adminUser = await db
@@ -51,8 +52,14 @@ app.post('/api/auth/login', async (req, res) => {
       .executeTakeFirst();
 
     if (user) {
-      if (user.is_banned) return res.status(403).json({ success: false, message: user.ban_message || 'Banned.', banned: true });
-      if (user.role === 'mechanic' && !user.is_approved) return res.status(403).json({ success: false, message: 'Pending approval.', pending_approval: true });
+      if (user.is_banned)
+        return res
+          .status(403)
+          .json({ success: false, message: user.ban_message || 'Banned.', banned: true });
+      if (user.role === 'mechanic' && !user.is_approved)
+        return res
+          .status(403)
+          .json({ success: false, message: 'Pending approval.', pending_approval: true });
 
       const { password: _, ...userWithoutPassword } = user;
       return res.json({ success: true, user: userWithoutPassword });
@@ -78,10 +85,24 @@ app.get('/api/services', async (req, res) => {
    SERVE FRONTEND
 ===================== */
 
+// Use static-serve.js for production if needed
 if (process.env.NODE_ENV === 'production') {
   setupStaticServing(app);
 }
 
+// Serve React build folder
+const buildPath = path.join(process.cwd(), 'build'); // 'build' is the folder React creates
+app.use(express.static(buildPath));
+
+// Catch-all route to serve index.html for React SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
+
 /* =====================
    START SERVER
-===============
+===================== */
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
