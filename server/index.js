@@ -3,8 +3,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { db } from './database.js';
 import { setupStaticServing } from './static-serve.js';
+import { db } from './database.js';
 
 dotenv.config();
 
@@ -30,12 +30,11 @@ app.use((req, res, next) => {
    API ROUTES
 ===================== */
 
-// Login route
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password, role } = req.body;
-    console.log('Login attempt:', { username, role });
 
+    // Hardcoded admin login
     if (role === 'mechanic' && username === 'ROYALTYAUTOADMIN' && password === 'Napkin06102001!') {
       const adminUser = await db
         .selectFrom('users')
@@ -81,7 +80,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Get services route
 app.get('/api/services', async (req, res) => {
   try {
     const services = await db.selectFrom('services').selectAll().orderBy('id').execute();
@@ -93,23 +91,14 @@ app.get('/api/services', async (req, res) => {
 });
 
 /* =====================
-   SERVE FRONTEND
+   SERVE FRONTEND (VITE DIST)
 ===================== */
 
-// Use static-serve.js only if needed
-if (process.env.NODE_ENV === 'production') {
-  setupStaticServing(app);
-}
-
-// Serve Vite build (dist) folder
-const buildPath = path.join(process.cwd(), 'dist');
+const buildPath = path.join(process.cwd(), 'dist'); // Vite output folder
 app.use(express.static(buildPath));
 
-// Catch-all for React Router SPA
 app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api/')) {
-    res.sendFile(path.join(buildPath, 'index.html'));
-  }
+  res.sendFile(path.join(buildPath, 'index.html'));
 });
 
 /* =====================

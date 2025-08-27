@@ -1,24 +1,26 @@
+// vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  root: '.', // Project root where index.html is located
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'), // Allows imports like "@/pages/LoginPage"
+  root: process.cwd(), // current working directory
+  base: '/', // base path for assets
+  build: {
+    outDir: 'build', // output folder for production build
+    emptyOutDir: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, 'index.html'), // entry point
     },
   },
-  build: {
-    outDir: 'build', // Output folder for production build
-    emptyOutDir: true, // Clears build folder before building
-    rollupOptions: {
-      input: path.resolve(__dirname, 'index.html'), // Ensure Vite finds your index.html
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'), // optional: allows import from '@/components/...'
     },
   },
   server: {
-    port: 3000, // Optional: dev server port
-    open: true, // Opens browser automatically when running dev
+    port: 5173,
+    open: true,
   },
 });
